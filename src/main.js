@@ -3,8 +3,14 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import YDUI from 'vue-ydui'; /* 相当于import YDUI from 'vue-ydui/ydui.rem.js' */
+import 'vue-ydui/dist/ydui.rem.css';
+import $ from 'jquery'
+/* 使用px：import 'vue-ydui/dist/ydui.px.css'; */
+Vue.use(YDUI);
+Vue.prototype.path = "http://appinter.sunwoda.com/common/LoveTheSkyUser/";
 
-Vue.config.productionTip = false
+Vue.prototype.websocket;
 
 /* eslint-disable no-new */
 new Vue({
