@@ -3,15 +3,21 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import YDUI from 'vue-ydui'; /* 相当于import YDUI from 'vue-ydui/ydui.rem.js' */
+import YDUI from 'vue-ydui';
 import 'vue-ydui/dist/ydui.rem.css';
 import $ from 'jquery'
-/* 使用px：import 'vue-ydui/dist/ydui.px.css'; */
+import dateFns from 'date-fns';
+Vue.prototype.dateFns = dateFns;
 Vue.use(YDUI);
 Vue.prototype.path = "http://appinter.sunwoda.com/common/LoveTheSkyUser/";
-
+// Vue.prototype.path = "http://appinter.sunwoda.com/weixin/LoveTheSkyUser/";
+// Vue.prototype.path = "http://172.30.128.32:8083/swdAPP/weixin/LoveTheSkyUser/";
 Vue.prototype.websocket;
-
+Vue.directive('title', {
+  inserted: function (el, binding) {
+    document.title = el.dataset.title
+  }
+});
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

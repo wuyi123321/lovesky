@@ -10,7 +10,7 @@
         <yd-badge type="danger" v-if="addNum>0">{{addNum}}</yd-badge>
       </yd-flexbox-item>
     </yd-flexbox>
-    <yd-flexbox class="friItem" v-for="(item,n) in list" @click.native="goItem(item)">
+    <yd-flexbox class="friItem" v-for="(item,n) in  friList" @click.native="goItem(item)">
       <div class="avtor"><img :src="'http://appinter.sunwoda.com'+item.headPhoto" width="100%" height="100%"></div>
       <yd-flexbox-item>
         <div class="name">{{item.userName}}</div>
@@ -32,78 +32,56 @@
   import messphoto from '@/assets/message.png'
 export default {
   props:{
-    chatData:Array,
+    friList:Array,
+    addNum:Number
+
   },
   data () {
     return {
      messphoto:messphoto,
-     addNum:0,
-     list:[],
-     friList:[],
+     chatData:[],
     }
   },
-  watch:{
-    chatData:function (val,old) {
-      var vm = this;
-      this.list = [];
-      console.log(val);
-        for(var i=0;i<this.friList.length;i++){
-            this.friList[i].chetLs=[];
-            this.friList[i].chetReNum=0;
-            vm.addNum = 0
-            for(var j=0;j<val.length;j++){
-              if( val[j].status==2){
-                vm.addNum=vm.addNum+1
-                console.log("aaaaaaaaaaaaaa");
-              }
-              if(this.friList[i].userNo==val[j].userNo && val[j].status==1){
-                this.friList[i].chetLs.push(val[j]);
-                this.friList[i].chetReNum=this.friList[i].chetReNum+1;
-              }
-
-            }
-            console.log(vm.addNum);
-        }
-        console.log(this.friList);
-      this.list = this.friList
-    }
+  watch: {
+//    chatDataS: {
+//      handler(newValue, oldValue) {
+//        console.log("sasdasdasda");
+//        this.chatData = JSON.parse(localStorage.getItem("noReadchatData"));
+//        console.log(this.friList);
+//      },
+//      deep: true
+//    }
   },
   mounted: function(){
-    console.log(this.chatData);
-    this.getFriList();
+
+    if(localStorage.getItem("noReadchatData")){
+      this.chatData = JSON.parse(localStorage.getItem("noReadchatData"));
+    }
+    console.log( this.chatData);
+
   },
 
   methods:{
     goItem:function (item) {
+      for (var i = this.chatData.length-1;i >= 0;i--) {
+        if(this.chatData[i].status == 1 && this.chatData[i].userNo == item.userNo){
+          this.chatData.splice(i,1);
+        }
+      }
+      localStorage.setItem("noReadchatData",JSON.stringify(this.chatData));
+      console.log(this.chatData);
       this.$router.push({ path: 'chetItem',query:{chetUserNo:item.userNo}})
     },
     goadd:function () {
+      for (var i = this.chatData.length-1;i >= 0;i--) {
+        if(this.chatData[i].status == 2){
+          this.chatData.splice(i,1);
+        }
+      }
+      localStorage.setItem("noReadchatData",JSON.stringify(this.chatData));
       this.$router.push({ path: 'addFri'})
     },
-    getFriList:function () {
-      var vm =this;
-      $.ajax({
-        url: "http://appinter.sunwoda.com/common/lsfriend/friendInfo.json",
-        dataType: "json",
-        data:{token:localStorage.getItem('skyUsertoken'),userNo:JSON.parse(localStorage.getItem('skyUser')).userNo},
-        type: "get",
-        success: function(data) {
-          console.log(data);
-           if(data.statusCode==0){
-             vm.friList = data.dataInfo.listData;
-             for(var i=0;i<vm.friList.length;i++ ){
-               vm.friList[i].chetLs=[];
-               vm.friList[i].chetReNum=0;
-             }
-             vm.list = vm.friList
-           }
 
-        },
-        error: function() {
-
-        }
-      });
-    }
   }
 
 }

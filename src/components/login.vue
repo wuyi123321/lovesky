@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+   <div class="login">
     <yd-navbar title="缘分天空注册"></yd-navbar>
 
     <yd-step :current="step" class="steps" current-color="#ff4949" >
@@ -62,7 +62,7 @@
           <yd-input slot="right" type="number" v-model="userMess.weight" placeholder="请输入体重"></yd-input>
         </yd-cell-item>
         <yd-cell-item>
-          <span slot="left">户籍：</span>
+          <span slot="left">居住地：</span>
 
           <yd-input slot="right" v-model="userMess.area" placeholder="请输入户籍" max="8" required ></yd-input>
         </yd-cell-item>
@@ -82,17 +82,17 @@
             <option value="博士以上">博士以上</option>
           </select>
         </yd-cell-item>
-        <yd-cell-item>
-          <span slot="left">月收入：</span>
-          <select slot="right" v-model="userMess.monthlyIncome">
-            <option value="3000以下">3000以下</option>
-            <option value="3000-5000">3000-5000</option>
-            <option value="5000-8000">5000-8000</option>
-            <option value="8000-10000">8000-10000</option>
-            <option value="10000以上">10000以上</option>
-          </select>
+        <!--<yd-cell-item>-->
+          <!--<span slot="left">月收入：</span>-->
+          <!--<select slot="right" v-model="userMess.monthlyIncome">-->
+            <!--<option value="3000以下">3000以下</option>-->
+            <!--<option value="3000-5000">3000-5000</option>-->
+            <!--<option value="5000-8000">5000-8000</option>-->
+            <!--<option value="8000-10000">8000-10000</option>-->
+            <!--<option value="10000以上">10000以上</option>-->
+          <!--</select>-->
 
-        </yd-cell-item>
+        <!--</yd-cell-item>-->
         <yd-cell-item>
           <span slot="left">性格：</span>
           <span slot="right" >
@@ -137,7 +137,7 @@
              <img :src="imgs[0]" width="100%" height="100%">
             </div>
             <div class="avtor" v-if="imgs.length==0">
-               <input type="file" accept="image/*" capture="camera"  id="inputfile" @change="preImg('inputfile')" >
+               <input type="file" accept="image/*"  id="inputfile" @change="preImg('inputfile')" >
               <img :src="img" width="100%" height="100%">
             </div>
           </span>
@@ -146,12 +146,15 @@
         <yd-textarea slot="right" placeholder="请输入您的求偶宣言" maxlength="80" v-model="userMess.pLanguage"></yd-textarea>
       </yd-cell-item>
       </yd-cell-group>
+      <div class="agree">
+        <span><yd-checkbox v-model="agrre">我同意</yd-checkbox><span @click="goxieyi">缘分天空用户协议</span></span>
+      </div>
     </div>
     <yd-cell-group>
       <yd-cell-item>
         <yd-button slot="left"  type="danger" @click.native="step--" :disabled="friable">上一步</yd-button>
         <yd-button slot="right" type="danger" @click.native="step++" :disabled="endable" v-show="step!=4">下一步</yd-button>
-        <yd-button slot="right" type="danger" @click.native="sub" v-show="step==4">完成</yd-button>
+        <yd-button slot="right" type="danger" @click.native="sub" v-show="step==4" :disabled="!agrre">完成</yd-button>
       </yd-cell-item>
     </yd-cell-group>
   </div>
@@ -163,6 +166,7 @@ export default {
 
   data () {
     return {
+      agrre:true,
       endable:false,
       friable:true,
       step: 1,
@@ -176,7 +180,7 @@ export default {
         weight:"50",
         birthday:"1990-01-01",
         education:"本科",
-        monthlyIncome:"3000-5000",
+        monthlyIncome:"",
         maritalStatus:"未婚",
         area:"",
         lTypes:["善解人意","活波开朗","甜美清新"],
@@ -184,7 +188,7 @@ export default {
         hobbies:"",
         wechatNumber:"",
         qq:"",
-        tel:"17520",
+        tel:"",
         pLanguage:"",
         purchaseSituation:"",
         carSituation:"",
@@ -234,6 +238,9 @@ export default {
     }
   },
   methods: {
+    goxieyi:function () {
+      this.$router.push({path:"xieyi"})
+    },
     getMeMess:function () {
       localStorage.removeItem("skyUser");
       var vm =this;
@@ -245,16 +252,21 @@ export default {
         success: function(data) {
           console.log(data);
           if(data.statusCode == 0){
-            localStorage.setItem("skyUser",JSON.stringify(data.dataInfo.listData[0]));
-            vm.$router.replace({ path: '/main'});
-          }
+            if(data.dataInfo.listData[0].isDelete == 0){
+              vm.$router.replace({ path: '/disable'});
+            }else {
+              localStorage.setItem("skyUser",JSON.stringify(data.dataInfo.listData[0]));
+              vm.$router.replace({ path: '/main'});
+            }
 
+          }
         },
         error: function() {
 
         }
       });
     },
+
     sub:function () {
 
       var vm =this;
@@ -328,8 +340,9 @@ export default {
         processData: false,
         success: function (data) {
           console.log(data);
+          vm.$dialog.loading.close();
           if (data.statusCode == 0) {
-            vm.$dialog.loading.close();
+
             vm.getMeMess();
           }
         },error:function () {
@@ -484,6 +497,13 @@ export default {
     height: 100%;
     opacity: 0;
     z-index: 999;
+  }
+  .agree{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+
   }
 
 </style>

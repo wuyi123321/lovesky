@@ -1,7 +1,7 @@
 <template>
   <div class="center">
     <div class="item" v-for="item in userList">
-      <div class="item_left">
+      <div class="item_left" @click="goFriend(item.userNo)">
         <!--<div class="userName">{{item.username}}</div>-->
         <div class="photo"><img :src="'https://appinter.sunwoda.com/'+item.photo" width="100%" height="100%" style="border-radius: 5px "></div>
         <!--<div style="text-align: center;color:#ffc000;margin-top: 5px" v-if="isAdmin == true">{{item.sumVote?item.sumVote:0}}票</div>-->
@@ -24,6 +24,7 @@
         </div>
       </div>
     </div>
+    <yd-backtop class="yd-backtop"></yd-backtop>
   </div>
 
 </template>
@@ -47,29 +48,11 @@ props:{
   },
   methods:{
 
-//    getFriList:function () {
-//      var vm =this;
-//      $.ajax({
-//        url: vm.path+"findUserBytypes.json",
-//        dataType: "json",
-//        data:{token:vm.token,
-//          userNo:JSON.parse(localStorage.getItem('skyUser')).userNo,
-//          pageSize:10,
-//          page:1
-//        },
-//        type: "get",
-//        success: function(data) {
-//          console.log(data);
-//          if(data.statusCode==0){
-//            vm.userList = data.dataInfo.listData;
-//          }
-//
-//        },
-//        error: function() {
-//
-//        }
-//      });
-//    }
+    goFriend:function (userNo) {
+      if(userNo != JSON.parse(localStorage.getItem('skyUser')).userNo){
+        this.$router.push({path:'friend',query:{friNo:userNo}});
+      }
+    },
   }
 }
 </script>

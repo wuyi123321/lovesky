@@ -1,10 +1,11 @@
 <template>
+
   <div id="message">
-    <yd-navbar slot="navbar" :title="personMes.username">
-      <router-link to="chet" slot="left">
-        <yd-navbar-back-icon></yd-navbar-back-icon>
-      </router-link>
-    </yd-navbar>
+    <!--<yd-navbar slot="navbar" :title="personMes.username">-->
+      <!--<router-link to="chet" slot="left">-->
+        <!--<yd-navbar-back-icon></yd-navbar-back-icon>-->
+      <!--</router-link>-->
+    <!--</yd-navbar>-->
     <div class="content" id="centre">
     <div v-for="item in list" >
       <div class="leftMess" v-if="item.status == 1">
@@ -38,6 +39,7 @@ export default {
   },
   data () {
     return {
+      userName:"121",
       sendMess:"",
       list:[],
       chetList:[],
@@ -64,8 +66,11 @@ export default {
   methods:{
     scrollToBottom: function () {
       this.$nextTick(() => {
-        var div = document.getElementById('centre')
-        div.scrollTop = div.scrollHeight
+        var div = document.getElementById('centre');
+        if(div.scrollHeight){
+          div.scrollTop = div.scrollHeight
+        }
+
       })
     },
    getChetPerson:function () {
@@ -81,8 +86,9 @@ export default {
        success: function(data) {
          console.log(data);
          if(data.statusCode==0){
-              vm.personMes = data.dataInfo.listData[0]
+              vm.personMes = data.dataInfo.listData[0];
               vm.setChetList(data.dataInfo.listData[0]);
+              document.title = vm.personMes.username
          }
        },
        error: function() {
@@ -98,6 +104,10 @@ export default {
       }
       console.log(evt)
       var loChetData = JSON.parse(localStorage.getItem("skychatData"));
+      var chatData = JSON.parse(localStorage.getItem("noReadchatData"));
+      if(!chatData){
+        chatData = []
+      }
       if(!loChetData){
         loChetData = [];
       }
@@ -106,9 +116,11 @@ export default {
       this.chetList = JSON.parse(localStorage.getItem("skychatData"));
       vm.list = [];
       vm.setChetList(vm.personMes);
-      console.log(this.list)
-
-
+      console.log(this.list);
+      if(JSON.parse(evt.data).userNo != this.chetUserNo){
+        chatData.push(JSON.parse(evt.data));
+        localStorage.setItem("noReadchatData",JSON.stringify(chatData));
+      }
     },
     setChetList:function (item) {
          for(var i=0;i<this.chetList.length;i++){
@@ -121,13 +133,6 @@ export default {
              this.list.push(this.chetList[i]);
            }
          }
-
-
-     var div = document.getElementById('centre');
-     div.scrollTop = div.scrollHeight;
-      console.log( "asdasda"+div.scrollTop);
-      console.log("+++++++++++++++++");
-      console.log(this.list)
     },
     send:function () {
      var vm =this;
@@ -155,7 +160,7 @@ export default {
         vm.list = [];
         vm.setChetList(vm.personMes);
       }else {
-
+        vm.websocket = new WebSocket("ws://appinter.sunwoda.com:9002/springws/websocket?token="+localStorage.getItem('skyUsertoken'));
       }
     }
   }

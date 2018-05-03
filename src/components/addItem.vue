@@ -1,7 +1,7 @@
 <template>
   <div class="addItem" id="addItem">
-      <yd-navbar title=" 发表说说">
-        <yd-navbar-back-icon slot="left"  @click.native="back"></yd-navbar-back-icon>
+      <yd-navbar title="">
+        <!--<yd-navbar-back-icon slot="left"  @click.native="back"></yd-navbar-back-icon>-->
         <yd-button  type="danger" slot="right" @click.native="subm">
           发表
         </yd-button>
@@ -12,7 +12,7 @@
         <yd-input slot="right" required v-model="addType" max="20" placeholder="填写话题类型"></yd-input>
       </yd-cell-item>
       <yd-cell-item>
-        <yd-textarea slot="right" placeholder="填写话题内容" maxlength="500" v-model="addContent"></yd-textarea>
+        <yd-textarea slot="right" placeholder="填写话题内容" maxlength="500"  v-model="addContent"></yd-textarea>
       </yd-cell-item>
     </div>
     <div id="smallimages">
@@ -20,9 +20,9 @@
         <div class="deleteImg" @click="deleteImg(n)"><yd-icon name="delete" color="#fff" size="16px"></yd-icon></div>
         <img :src="img" width="80px" height="80px">
       </div>
-      <div class="cream">
+      <div class="cream" v-show="cream">
         <img :src="cameraImg" width="80px">
-        <input type="file" accept="image/*" capture="camera"  id="inputfile" @change="preImg('inputfile')" >
+        <input type="file" accept="image/*"   id="inputfile" @change="preImg('inputfile')" >
       </div>
     </div>
 
@@ -44,8 +44,18 @@
         rows:8,
         addType: '',
         addContent:"",
+        cream:true,
         imgs:[],
         subFile:[]
+      }
+    },
+    watch:{
+      imgs:function (val,old) {
+        if(val.length>=9){
+          this.cream = false
+        }else {
+          this.cream = true
+        }
       }
     },
     methods:{
@@ -128,13 +138,16 @@
         console.log(this.imgs)
         console.log(this.subFile)
       },
+
       subm:function () {
         if(this.addType=="" || this.addContent==""){
-          this.$message('请填写完整信息');
+         this.$dialog.toast({
+            mes: "请填写信息",
+            timeout: 500
+          });
         }else {
           var vm = this;
           vm.$dialog.loading.open('正在提交');
-
           var formData = new FormData();
           for(var k in this.subFile){ //文件数组
             formData.append('pPath',this.subFile[k]);

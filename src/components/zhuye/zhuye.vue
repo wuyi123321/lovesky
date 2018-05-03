@@ -5,34 +5,33 @@
         <img :src="i">
     </yd-slider-item>
   </yd-slider>
-
-    <yd-tab horizontal-scroll v-model="tab2">
+    <yd-tab  v-model="tab2">
       <yd-tab-panel label="所有">
-
+         <div style="height:2px;width: 100%;display:none" >1</div>
       </yd-tab-panel >
-      <yd-tab-panel label="性格查询">
+      <yd-tab-panel label="性格">
         <yd-checkbox-group v-model="lTypes">
           <yd-checkbox v-for="item in types" :val="item"  >
             <span>{{item}}</span>
           </yd-checkbox>
         </yd-checkbox-group>
       </yd-tab-panel>
-      <yd-tab-panel label="学历查询">
+      <yd-tab-panel label="学历">
         <yd-checkbox-group v-model="education">
           <yd-checkbox v-for="item in educationselect" :val="item"  >
             <span>{{item}}</span>
           </yd-checkbox>
         </yd-checkbox-group>
       </yd-tab-panel>
-      <yd-tab-panel label="收入查询" >
-        <yd-checkbox-group v-model="monthlyIncome">
-          <yd-checkbox v-for="item in monthlyIncomeselect" :val="item"  >
-            <span>{{item}}</span>
-          </yd-checkbox>
-        </yd-checkbox-group>
-      </yd-tab-panel>
+      <!--<yd-tab-panel label="收入" >-->
+        <!--<yd-checkbox-group v-model="monthlyIncome">-->
+          <!--<yd-checkbox v-for="item in monthlyIncomeselect" :val="item"  >-->
+            <!--<span>{{item}}</span>-->
+          <!--</yd-checkbox>-->
+        <!--</yd-checkbox-group>-->
+      <!--</yd-tab-panel>-->
 
-      <yd-tab-panel label="姓名查询" >
+      <yd-tab-panel label="姓名" >
       <yd-cell-group>
         <yd-cell-item>
           <input type="text" slot="right" placeholder="请输入姓名进行查询" v-model="username">

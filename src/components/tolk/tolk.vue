@@ -2,9 +2,11 @@
     <div class="content">
       <div class="listHeader">
         <yd-tab v-model="tab" :callback="itemClick">
-          <yd-tab-panel label="全部"><div style="width: 100vw"></div></yd-tab-panel>
-          <yd-tab-panel label="添加"><div  style="width: 100vw"></div></yd-tab-panel>
-          <yd-tab-panel label="我的"><div  style="width: 100vw"></div></yd-tab-panel>
+          <yd-tab-panel label="全部"><div style="display: none">
+            1
+          </div></yd-tab-panel>
+          <yd-tab-panel label="添加"><div ></div></yd-tab-panel>
+          <yd-tab-panel label="我的"><div ></div></yd-tab-panel>
         </yd-tab>
       </div>
 
@@ -12,9 +14,12 @@
       <yd-infinitescroll :callback="loadMore" ref="infinitescrollDemo">
          <div slot="list" v-for="(mess,n) in  tleTolk" class="tolkItem">
           <yd-flexbox class="it_top">
-            <div class="imgItem"><img v-bind:src="'http://appinter.sunwoda.com'+mess.photo.replace('.','thumbnail.')" ></div>
+            <div class="imgItem"><img v-bind:src="'http://appinter.sunwoda.com'+mess.photo.replace('.','thumbnail.')" @click="goFriend(mess.userNo)"></div>
             <yd-flexbox-item>
-              <div class="name">{{mess.userName}}</div>
+              <div class="name">{{mess.userName}}
+                <span class="deleteItem" v-if="mess.userNo==userNo" @click="deleteItem(n,mess.messageId)">
+                <yd-icon name="delete" size=".35rem" color="#888" >
+                </yd-icon></span></div>
             </yd-flexbox-item>
           </yd-flexbox>
 
@@ -74,8 +79,12 @@
                           <div class="me_txt">{{item.pMessage}}</div>
                         </div>
                       </div>
+
                     </div>
+
                 </div>
+
+
               </yd-accordion-item>
             </yd-accordion>
           </div>
@@ -96,6 +105,7 @@
       <span slot="doneTip">啦啦啦，啦啦啦，没有数据啦~~</span>
       <!-- 加载中提示，不指定，将显示默认加载中图标 -->
       <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+
       </yd-infinitescroll>
       </yd-pullrefresh>
       <bigImg v-if="showImg" @clickit="viewImg" :imgSrc="imgSrc"></bigImg>
@@ -105,6 +115,7 @@
           <yd-button slot="right" @click.native="subReplay" :disabled="replayDisable">回复</yd-button>
         </yd-cell-item>
       </yd-popup>
+      <yd-backtop class="yd-backtop"></yd-backtop>
     </div>
 </template>
 
@@ -143,7 +154,8 @@ export default {
   methods:{
 
     itemClick:function () {
-      console.log(this.tab);
+      console.log(this.totalPage);
+      this.startPage = 1;
       if(this.tab==0){
         this.userNoLi=null;
         this.tleTolk = [];
@@ -168,18 +180,52 @@ export default {
     viewImg(){//图片隐藏
       this.showImg = false;
     },
-    showPeople:function () {
-
+    goFriend:function (userNo) {
+     if(userNo != JSON.parse(localStorage.getItem('skyUser')).userNo){
+       this.$router.push({path:'friend',query:{friNo:userNo}});
+     }
     },
     loadMore:function () {
-      this.startPage++
-      console.log(this.startPage)
-      console.log(this.totalPage)
+      this.startPage++;
+      console.log(this.startPage);
+      console.log(this.totalPage);
       if(this.startPage>this.totalPage){
         this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
         return 0
       }
       this.getFriList(this.startPage);
+    },
+    deleteItem:function (n,messageId) {
+      var  vm =this;
+      this.$dialog.confirm({
+        title: '删除说说',
+        mes: '确定要删除此说说',
+        opts: () => {
+          $.ajax({
+            type: "get",
+            url: vm.path+"deleteStatement.json",
+            dataType: "json",
+            data:{
+              token:localStorage.getItem('skyUsertoken'),
+              messageId:messageId
+            },
+            success: function(data) {
+              vm.replayDisable = false
+              console.log(data);
+              vm.$dialog.toast({
+                mes: data.message,
+                timeout: 500
+              });
+              if(data.statusCode==0){
+                  vm.tleTolk.splice(n,1)
+              }
+            },
+            error: function() {
+
+            }
+          });
+        }
+      });
     },
     replayshow:function (messId,fid,n,m,reToName) {
        this.replay=true;
@@ -398,10 +444,19 @@ export default {
    margin-left: 0.5rem;
    font-size: 0.22rem;
    color: #888;
+   position: relative;
  }
+  .name .deleteItem{
+    position: absolute;
+    top: 0;
+    right: 0.4rem;
+  }
+
  .tolkItem .it_content p{
    padding-left: 15px;
    padding-right: 15px;
+   line-height: 0.4rem;
+   color: #555;
   }
  .tolkItem .it_content p span{
    color: #fda7f7;
@@ -439,6 +494,8 @@ export default {
  .listReplay .me_txt{
    font-size: 0.25rem;
    padding-left: 10px;
+   padding-bottom:5px;
+   color: #555;
  }
   .it_bottom{
     display: flex;

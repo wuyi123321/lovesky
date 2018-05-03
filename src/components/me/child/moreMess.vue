@@ -1,48 +1,58 @@
 <template>
-  <div class="me" v-title data-title="择偶信息">
+  <div class="me">
     <div style="height: 0.3rem"></div>
     <yd-cell-group>
       <yd-cell-item>
-        <span slot="left">择偶年龄</span>
-        <span slot="right">{{meMess.tYear}}</span>
+        <span slot="left">籍贯</span>
+        <span slot="right">{{meMess.nativePlace}}</span>
       </yd-cell-item>
       <yd-cell-item>
-        <span slot="left">择偶学历</span>
-        <span slot="right">{{meMess.tEducation}}</span>
+        <span slot="left">爱好</span>
+        <span slot="right">{{meMess.hobbies}}</span>
       </yd-cell-item>
-
+      </yd-cell-group>
+      <yd-cell-group>
       <yd-cell-item>
-        <span slot="left">择偶身高</span>
-        <span slot="right">{{meMess.tHeight}}</span>
+        <span slot="left">微信</span>
+        <span slot="right">{{meMess.wechatNumber}}</span>
       </yd-cell-item>
       <yd-cell-item>
-        <span slot="left">择偶性格</span>
-        <span slot="right">{{meMess.tTypes}}</span>
+        <span slot="left">qq</span>
+        <span slot="right">{{meMess.qq}}</span>
       </yd-cell-item>
-
+      <yd-cell-item>
+        <span slot="left">电话</span>
+        <span slot="right">{{meMess.tel}}</span>
+      </yd-cell-item>
     </yd-cell-group>
     <yd-cell-group>
       <yd-cell-item>
-        <span slot="left">择偶居住地</span>
-        <span slot="right">{{meMess.tArea}}</span>
+        <span slot="left">购房情况</span>
+        <span slot="right">{{meMess.purchaseSituation}}</span>
       </yd-cell-item>
       <yd-cell-item>
-        <span slot="left">择偶购房情况</span>
-        <span slot="right">{{meMess.tPurchaseSituation}}</span>
+        <span slot="left">购车情况</span>
+        <span slot="right">{{meMess.carSituation}}</span>
+      </yd-cell-item>
+      </yd-cell-group>
+      <yd-cell-group>
+      <yd-cell-item>
+        <span slot="left">毕业学校</span>
+        <span slot="right">{{meMess.graduateShcool}}</span>
       </yd-cell-item>
       <yd-cell-item>
-        <span slot="left">择偶购车情况</span>
-        <span slot="right">{{meMess.tCarSituation}}</span>
+        <span slot="left">工作</span>
+        <span slot="right">{{meMess.work}}</span>
       </yd-cell-item>
-      <!--<yd-cell-item>-->
-        <!--<span slot="left">择偶月收入</span>-->
-        <!--<span slot="right">{{meMess.tMonthlyIncome}}</span>-->
-      <!--</yd-cell-item>-->
+      <yd-cell-item>
+        <span slot="left">所学专业</span>
+        <span slot="right">{{meMess.major}}</span>
+      </yd-cell-item>
     </yd-cell-group>
     <yd-cell-item v-show="!imgable">
-      <yd-button slot="right" size="large" type="primary" @click.native="updataMess">修改择偶信息</yd-button>
+      <yd-button slot="right" size="large" type="primary" @click.native="updataMess">修改个人信息</yd-button>
     </yd-cell-item>
-
+     <div style="height: 50px;width: 100%"></div>
   </div>
 </template>
 
@@ -66,7 +76,7 @@ export default {
   },
   methods:{
     updataMess:function () {
-      this.$router.push({path:"updatatMess"});
+      this.$router.push({path:"updatamMess"});
     },
   }
 }

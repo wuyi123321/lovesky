@@ -56,7 +56,7 @@ export default {
     agree:function (item,n) {
       var vm = this;
       $.ajax({
-        url: "http://appinter.sunwoda.com/common/lsfriend/addFriend.json",
+        url: "http://appinter.sunwoda.com/weixin/common/lsfriend/addFriend.json",
         dataType: "json",
         data:{
           token:localStorage.getItem('skyUsertoken'),
@@ -75,7 +75,7 @@ export default {
             console.log(vm.list);
             vm.list.splice(n,1);
             console.log(vm.list);
-            for(var i=0;i<vm.chetList.length;i++){
+            for(var i=vm.chetList.length-1;i>=0;i--){
               if(vm.chetList[i].status == 2 && vm.chetList[i].userNo == item.userNo){
                 var loChetData = JSON.parse(localStorage.getItem("skychatData"));
                 if(!loChetData){
@@ -97,7 +97,7 @@ export default {
       var vm = this;
       vm.list.splice(n,1);
       console.log(vm.list);
-      for(var i=0;i<vm.chetList.length;i++){
+      for(var i=vm.chetList.length-1;i>=0;i--){
         if(vm.chetList[i].status == 2 && vm.chetList[i].userNo == item.userNo){
           var loChetData = JSON.parse(localStorage.getItem("skychatData"));
           if(!loChetData){

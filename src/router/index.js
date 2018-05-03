@@ -12,7 +12,15 @@ export default new Router({
     {path: '/addFri', component: resolve => require(['@/components/chet/addFri.vue'], resolve),},
     {path: '/myMess', component: resolve => require(['@/components/me/child/myMess.vue'], resolve),},
     {path: '/loveMess', component: resolve => require(['@/components/me/child/loveMess.vue'], resolve),},
+    {path: '/moreMess', component: resolve => require(['@/components/me/child/moreMess.vue'], resolve),},
+    {path: '/updataMess', component: resolve => require(['@/components/me/child/updataMess.vue'], resolve),},
+    {path: '/updatatMess', component: resolve => require(['@/components/me/child/updatatMess.vue'], resolve),},
+    {path: '/updatamMess', component: resolve => require(['@/components/me/child/updatamMess.vue'], resolve),},
+    {path: '/friend', component: resolve => require(['@/components/friend.vue'], resolve),},
+    {path: '/disable', component: resolve => require(['@/components/disable.vue'], resolve),},
+    {path: '/xieyi', component: resolve => require(['@/components/me/child/xieyi.vue'], resolve),},
     {path: '/main', component: resolve => require(['@/components/main.vue'], resolve),
+
       children:[
         {path: '/', redirect: '/zhuye'},
         {path: '/me', component: resolve => require(['@/components/me/me.vue'], resolve),},
